@@ -1,0 +1,13 @@
+name: I-Adopt Catalogue
+description: A simple catalogue for I-Adopt variables based on static files.
+author: Sirko Schindler
+
+# Define your inputs here.
+#inputs:
+
+# Define your outputs here.
+#outputs:
+
+runs:
+  using: docker
+  image: Dockerfile
