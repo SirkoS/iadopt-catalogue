@@ -1,0 +1,7 @@
+
+
+services:
+  iadopt-catalogue:
+    build: .
+    volumes:
+      - ./test/:/github/workspace
