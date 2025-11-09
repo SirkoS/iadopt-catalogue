@@ -7,7 +7,7 @@
 </script>
 <script lang="ts">
   import type { VariableList } from '$lib/store/variable';
-    import OverviewNav from './OverviewNav.svelte';
+  import OverviewNav from './OverviewNav.svelte';
 
   let {
     data
@@ -19,11 +19,11 @@
 
   // build navigation hierarchy
   const nav : Array<NavList> = [];
-  for( const [key, entries] of Object.entries( data.variables ) ) {
+  for( const [key, _] of Object.entries( data.variables ) ) {
     nav.push({
       label: key,
-      link: `#${encodeURIComponent( key )}`,
-    })
+      link: key,
+    });
   }
 </script>
 
@@ -34,7 +34,7 @@
 <main>
   {#each Object.entries( data.variables ) as [key, entries]}
   <section>
-    <h2 id="{encodeURIComponent( key )}">{key}</h2>
+    <h2 id="{key}">{key}</h2>
     <ul class="variable-list">
       {#each entries as entry}
       <li class="variable-item">

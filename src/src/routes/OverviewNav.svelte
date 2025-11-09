@@ -61,7 +61,8 @@
     <ul>
       {#each nav as entry}
         <li>
-          <a href={entry.link}>
+          <!-- having to encode here but not in the corresponding anchor seems odd but it works ... -->
+          <a href={`#${encodeURIComponent(entry.link)}`}>
             {entry.label}
           </a>
         </li>

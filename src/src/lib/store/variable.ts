@@ -75,7 +75,7 @@ export async function getVariables() : Promise<{ [index: string]: Array<Variable
     variables[key].sort( (a,b) => a.title.localeCompare( b.title ) );
   }
 
-  return variables
+  return variables;
 }
 
 
