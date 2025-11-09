@@ -6,10 +6,12 @@ export const VALID_SYMMETRIC_SYSTEM_PROPERTIES = [
   'hasPart',
 ];
 
-export const VALID_ASYMMETRIC_SYSTEM_PROPERTIES = [
-  'hasSource',
-  'hasTarget',
+export const VALID_ASYMMETRIC_SYSTEM_PROPERTY_PAIRS = [
+  [ 'hasNumerator', 'hasDenominator' ],
+  [ 'hasSource', 'hasTarget' ],
 ];
+
+export const VALID_ASYMMETRIC_SYSTEM_PROPERTIES = VALID_ASYMMETRIC_SYSTEM_PROPERTY_PAIRS.flat();
 
 export const VALID_SYSTEM_PROPERTIES = [
   ...VALID_SYMMETRIC_SYSTEM_PROPERTIES,
@@ -66,6 +68,10 @@ export class Concept {
       this._comment  = Object.fromEntries( Object.entries( comment ?? {} ).filter( ([_, val]) => val ) );
     }
 
+    if( this instanceof Variable ) {
+      this.#role = 'Variable';
+    }
+
   }
 
 
@@ -105,10 +111,36 @@ export class Concept {
 
   /**
    *
+   * @param {string|null} iri
+   */
+  setIri( iri ){
+    if( iri ) {
+      this._iri = iri;
+      this._isBlank = false;
+    } else {
+      this._iri = null;
+      this._isBlank = true;
+    }
+  }
+
+
+  /**
+   *
    * @returns {string}
    */
   getIri(){
     return this._isBlank ? null : this._iri;
+  }
+
+
+  /**
+   * return an identifier for this concept
+   * for named nodes, this is the IRI
+   * for blank nodes, this will be an arbitrary identifier
+   * @returns {string}
+   */
+  getId(){
+    return this._iri;
   }
 
 
@@ -333,6 +365,7 @@ export class Variable extends Concept {
 
     constraint.setRole( 'Constraint' );
     this.#constraints.push( constraint );
+    constraint.setVariable( this );
 
   }
 
@@ -390,12 +423,45 @@ export class Variable extends Concept {
     return this.#constraints.slice( 0 );
   }
 
+
   /**
    *
    * @returns {string}
    */
   getClassLabel() {
     return 'Variable';
+  }
+
+
+  /**
+   * @param {Constraint} constraint
+   */
+  _removeConstraint(constraint) {
+    this.#constraints = this.#constraints.filter( (c) => c != constraint );
+  }
+
+
+  /**
+   * @param {Entity} ctx
+   */
+  _removeContextObject( ctx ) {
+    this.#context = this.#context.filter( (c) => c != ctx );
+  }
+
+
+  /**
+   * @param {Entity} ctx
+   */
+  _removeStatisticalModifier( ctx ) {
+    this.#statisticalModifier = undefined;
+  }
+
+
+  /**
+   *
+   */
+  _removeMatrix() {
+    this.#matrix = undefined;
   }
 
 
@@ -458,6 +524,15 @@ export class Constraint extends Concept {
   }
 
 
+  /**
+   * remove this Constraint from the variable
+   */
+  remove() {
+    this.getVariable()._removeConstraint( this );
+    this.#constrains.forEach( (c) => c._removeConstraint( this ) );
+  }
+
+
   toString() {
     return `[Constraint ${ this._iri ? `(${this._iri})` : '(_blank)' }`
   + (
@@ -483,9 +558,9 @@ export class Constraint extends Concept {
 
 export class Entity extends Concept {
 
-  /** @typedef {Array.<Constraint>} */
+  /** @type {Array.<Constraint>} */
   #constrained = [];
-  /** @typedef {Object.<String, Array.<Entity>>} */
+  /** @type {Object.<String, Array.<Entity>>} */
   #systemComponents = {};
 
 
@@ -515,6 +590,16 @@ export class Entity extends Concept {
    */
   _addConstraint( constraint ) {
     this.#constrained.push( constraint );
+  }
+
+
+  /**
+   * remove a constraint from this Entity
+   * does not trigger recursive cleanup!
+   * @param {Constraint} constraint
+   */
+  _removeConstraint(constraint) {
+    this.#constrained = this.#constrained.filter( (c) => c != constraint );
   }
 
 
@@ -580,12 +665,66 @@ export class Entity extends Concept {
   }
 
 
+
+  /**
+   * get the properties used for system components
+   * @returns {string}
+   */
+  getComponentKeys() {
+    return Object.keys( this.#systemComponents );
+  }
+
+
+
+  /**
+   * change properties used for components
+   * @param {Array<string>} props
+   */
+  changeComponentKeys( props ) {
+
+    // validate properties
+    for( const prop of props ) {
+      if( !VALID_SYSTEM_PROPERTIES.includes( prop ) ) {
+        throw new Error( `Invalid system property: "${prop}"`);
+      }
+    }
+
+    // get previous components
+    /** @type {Array.<Entity>} */
+    const components = Object.values( this.#systemComponents ).flat();
+
+    // validate we have the proper number of properties
+    if( props.length != components.length ) {
+      throw new Error( `Need exactly ${components.length} new properties!` );
+    }
+
+    // clear out previous list
+    this.#systemComponents = {};
+
+    // re-add components using new properties
+    for( let i=0; i<components.length; i++ ) {
+      this.addComponent( props[i], components[i] );
+    }
+
+  }
+
+
+
   /**
    *
    * @returns {Boolean}
    */
   isSystem() {
     return Object.keys( this.#systemComponents ).length > 0;
+  }
+
+
+  /**
+   *
+   * @returns {Boolean}
+   */
+  isSymmetricSystem() {
+    return Object.keys( this.#systemComponents ).length == 1;
   }
 
 
@@ -610,6 +749,70 @@ export class Entity extends Concept {
     }
 
   }
+
+
+
+  /**
+   * remove this Entity from the Variable
+   */
+  remove() {
+
+    // some elements can not be removed
+    if( [ 'OoI', 'SystemComponent', 'Property' ].includes( this.getRole() ) ) {
+      console.warn( `Can not remove Entities of type ${this.getRole()}` );
+      return;
+    }
+
+    // remove all constraints
+    for( const constraint of [ ... this.#constrained ] ) {
+      constraint.remove();
+    }
+
+    // for system, remove components including their constraints
+    this.removeComponents();
+
+    // remove this entity itself
+    switch( this.getRole() ) {
+      case 'Matrix':
+        this.getVariable()._removeMatrix();
+        break;
+      case 'ContextObject':
+        this.getVariable()._removeContextObject( this );
+        break;
+      case 'StatisticalModifier':
+        this.getVariable()._removeStatisticalModifier( this );
+        break;
+      default:
+        throw Error( `Missing Code for removal of Entity type ${this.getRole()}` );
+    }
+  }
+
+
+
+  /**
+   * remove all components of this Entity, if it has some
+   * in effect removing its state as a System
+  */
+  removeComponents() {
+
+    if( this.isSystem() ) {
+
+      // constraints of components
+      const compConstraints = Object.values( this.#systemComponents )
+        .flat()
+        .flatMap( (c) => c.getConstraints() );
+      // remove them
+      for( const constraint of compConstraints ) {
+        constraint.remove();
+      }
+
+      // remove components themselves
+      this.#systemComponents = {};
+
+    }
+
+  }
+
 
 
   toString() {
@@ -640,6 +843,8 @@ export class Entity extends Concept {
 ]`;
   }
 
+
+
   /**
    * provide a copy of this Entity
    */
@@ -661,6 +866,7 @@ export class Entity extends Concept {
     }
     return dupe;
   }
+
 }
 
 
