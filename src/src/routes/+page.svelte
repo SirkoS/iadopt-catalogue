@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
   export type NavList = {
     label:      string,
     link:       string,
@@ -19,6 +19,7 @@
 
   // build navigation hierarchy
   const nav : Array<NavList> = [];
+  // svelte-ignore state_referenced_locally
   for( const [key, _] of Object.entries( data.variables ) ) {
     nav.push({
       label: key,
