@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { VariableList } from "$lib/store/variable";
 
-
   let {
     selected,
     variables,
@@ -11,6 +10,7 @@
   } = $props();
 
   // determine base path
+  // svelte-ignore state_referenced_locally
   const toBase = selected
     .split( '/' )
     .slice( 0, -1 )
@@ -18,9 +18,58 @@
     .join( '/')
 
   // determine selected section
+  // svelte-ignore state_referenced_locally
   const selectedSection = Object.keys( variables )
     .find( (key) => variables[key].some( (v) => v.path == selected ) )
 </script>
+
+<div class="navBox">
+  <div class="navBoxHead">Filter</div>
+  <div class="navBoxBody filterBody">
+    <input type="text" id="filter" placeholder="Filter Variables ..."/>
+    <script>
+      (function(){
+
+        // schedule update of filter
+        let filterTimer = null;
+        document.querySelector( '#filter' )
+          ?.addEventListener( 'input', () => {
+            if ( filterTimer ) {
+              clearTimeout( filterTimer );
+            }
+            filterTimer = setTimeout( triggerFilter, 200 );
+          } );
+
+
+        function triggerFilter() {
+
+          // get filter term
+          const term = document.querySelector( '#filter' )?.value?.toLowerCase() || null;
+
+          for( const entry of document.querySelectorAll( '.navBoxItem') ) {
+
+            if( term ) {
+
+              // only show, if filter term is included
+              if( ! entry.textContent?.toLowerCase().includes( term ) ) {
+                entry.classList.add( 'hidden' );
+              } else {
+                entry.classList.remove( 'hidden' );
+              }
+
+            } else {
+
+              // if no filter term is set, show all entries
+              entry.classList.remove( 'hidden' );
+
+            }
+          }
+        }
+
+      })();
+    </script>
+  </div>
+</div>
 
 <div class="navBox">
   <div class="navBoxHead">Navigation</div>
@@ -34,7 +83,7 @@
           <input id="checkBox{section}" type="checkbox" checked={selectedSection == section} />
           <ul>
           {#each variables[section] as variable}
-          <a href={(toBase ? `${toBase}/${variable.path}` : variable.path) + '.html'}>
+          <a href={(toBase ? `${toBase}/${variable.path}` : variable.path) + '.html'} class="navBoxItem">
             <li class:selected={selected == variable.path}>
                 {variable.title}
             </li>
@@ -81,5 +130,8 @@ input[type=checkbox] {
 }
 :global( .navBox input[type="checkbox"]:checked + ul ) {
   display: block;
+}
+:global(.hidden) {
+  display: none;
 }
 </style>
