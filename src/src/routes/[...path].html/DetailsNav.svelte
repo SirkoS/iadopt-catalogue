@@ -46,6 +46,7 @@
           // get filter term
           const term = document.querySelector( '#filter' )?.value?.toLowerCase() || null;
 
+          // visibility entries
           for( const entry of document.querySelectorAll( '.navBoxItem') ) {
 
             if( term ) {
@@ -64,6 +65,21 @@
 
             }
           }
+
+          // visibility categories
+          for( const entry of document.querySelectorAll( '.navBoxSection') ) {
+
+            if( term ) {
+
+              entry.querySelector( 'input[type="checkbox"]' ).checked = true;
+
+            } else {
+
+              entry.querySelector( 'input[type="checkbox"]' ).checked = !!entry.querySelector( 'li.selected' );
+
+            }
+          }
+
         }
 
       })();
@@ -76,7 +92,7 @@
   <div class="navBoxBody">
     <ul>
       {#each Object.keys(variables) as section}
-        <li>
+        <li class="navBoxSection">
           <label for="checkBox{section}">
             <i>{section}</i>
           </label>
