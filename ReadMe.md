@@ -1,4 +1,4 @@
-
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.18098559.svg)](https://doi.org/10.5281/zenodo.18098559)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
 # I-Adopt Catalogue
@@ -44,4 +44,21 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
+```
+
+## Cite as
+
+*Sirko Schindler (2025) “SirkoS/iadopt-catalogue”. Zenodo. doi:10.5281/zenodo.18098559.*
+
+```bibtext
+@software{Schindler2025,
+  author       = {Sirko Schindler},
+  title        = {SirkoS/iadopt-catalogue: v0.1.0},
+  month        = dec,
+  year         = 2025,
+  publisher    = {Zenodo},
+  version      = {v0.1.0},
+  doi          = {10.5281/zenodo.18098559},
+  url          = {https://doi.org/10.5281/zenodo.18098559},
+}
 ```
