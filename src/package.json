@@ -1,8 +1,8 @@
 {
-	"name": "iadopt-variables",
+	"name": "iadopt-catalogue",
 	"private": true,
-	"version": "1.1.0",
-	"description": "prepare IAdopt Variables for github pages",
+	"version": "0.1.0",
+	"description": "A simple catalogue for I-Adopt-based Variables.",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
@@ -35,7 +35,10 @@
 			"esbuild"
 		]
 	},
-	"author": "Sirko Schindler",
-	"license": "MIT",
+	"author": {
+    "name": "Sirko Schindler",
+    "url": "https://orcid.org/0000-0002-0964-4457"
+  },
+  "license": "CC BY 4.0",
 	"packageManager": "pnpm@10.20.0"
 }
