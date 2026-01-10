@@ -1,25 +1,35 @@
 <script lang="ts">
-  import type { Snippet } from 'svelte'
+  import type { SettingsType } from "$lib/store/settings";
+  import type { Snippet } from "svelte";
 
   // fetch remaining content
   let {
-    children
+    children,
+    data,
   }: {
-    children?: Snippet
+    children?: Snippet,
+    data: {
+      settings: SettingsType
+    },
   } = $props()
 </script>
 
+<svelte:head>
+  <title>{data.settings.title}</title>
+</svelte:head>
+
+
 <div class="container">
   <header>
-    <h1>I-ADOPT Variable Modelling Challenge</h1>
-    <p>Current state of canonical solutions.</p>
+    <h1>{@html data.settings.title}</h1>
+    <p>{@html data.settings.subtitle}</p>
   </header>
 
   {@render children?.()}
 
 
   <footer>
-    <p>&copy; 2025 I-ADOPT. All rights reserved.</p>
+    <p>{@html data.settings.footer}</p>
   </footer>
 </div>
 
@@ -60,6 +70,9 @@ footer {
   text-align: center;
   padding: 10px 0;
   grid-area: bottom;
+}
+:global(footer *) {
+  color: #fff;
 }
 
 :global(.navBox) {

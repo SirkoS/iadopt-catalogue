@@ -46,6 +46,16 @@ jobs:
           publish_dir: ./build
 ```
 
+## Customizing
+
+You can customize some texts via adding a `.iadopt-catalogue.yml` in the base folder of your repository.
+Recognized settings are:
+* `title`     &hellip; main title of the page
+* `subtitle`  &hellip; subtitle of the page; directly below main title
+* `footer`    &hellip; footer text, e.g., containing copyright notice
+
+
+
 ## Cite as
 
 *Sirko Schindler (2025) “SirkoS/iadopt-catalogue”. Zenodo. doi:10.5281/zenodo.18098559.*
