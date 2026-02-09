@@ -1,4 +1,3 @@
-import extract from '$lib/util/extract.js';
 import { promises as Fs } from 'node:fs';
 import Path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -56,6 +55,8 @@ export async function getSettings() {
 
     return SETTINGS;
 
-  } catch {}
+  } catch (e) {
+    console.error( e )
+  }
 
 }

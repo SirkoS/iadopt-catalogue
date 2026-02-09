@@ -2,13 +2,14 @@ import extract from '$lib/util/extract.js';
 import { promises as Fs } from 'node:fs';
 import Path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { Variable } from "$lib/util/model/models";
+import type { Variable } from '$lib/util/model/models';
 
 
 // memoization
-const VARIABLES : { [index: string]: Variable } = {}
-const PARSER_ERRORS : { [index: string]: any } = {}
-const RAWS : { [index: string]: string } = {}
+const VARIABLES : Record<string, Variable> = {};
+let VARIABLE_LIST :  Record< string, VariableList[] > | undefined = undefined;
+const PARSER_ERRORS : Record<string, unknown> = {};
+const RAWS : Record<string, string> = {};
 
 
 // root path to load RDF-files
@@ -33,7 +34,12 @@ export type VariableList = {
  */
 export async function getVariables() : Promise<{ [index: string]: Array<VariableList> }> {
 
-  const variables : { [index: string]: Array<VariableList> } = {};
+  // short circuit
+  if( VARIABLE_LIST ) {
+    return VARIABLE_LIST;
+  }
+
+  const variables : Record< string, VariableList[] > = {};
 
   // scan for RDF files
   for await(const rawFilePath of Fs.glob( '**/*.ttl', { cwd: PATH_ROOT } ) ) {
@@ -48,7 +54,7 @@ export async function getVariables() : Promise<{ [index: string]: Array<Variable
     try {
       variable = await getVariable( rawFilePath );
     } catch( e ) {
-      console.error( rawFilePath + ' - ' + e.message );
+      console.error( rawFilePath + ' - ' + (e as Error).message );
       continue;
     }
     if( !variable ) {
@@ -58,11 +64,12 @@ export async function getVariables() : Promise<{ [index: string]: Array<Variable
 
     // add to results
     const entry = {
-      title:    variable.getLabel(),
+      title:    variable.getLabel() ?? variable.getShortIri(),
       comment:  variable.getComment(),
       path:     rawFilePath.replace( /\\/g, '/' ),  // use canonical web paths
       section:  Path.dirname( rawFilePath ),
     };
+
     if( !(entry.section in variables) ) {
       variables[entry.section] = [];
     }
@@ -75,6 +82,8 @@ export async function getVariables() : Promise<{ [index: string]: Array<Variable
     variables[key].sort( (a,b) => a.title.localeCompare( b.title ) );
   }
 
+  // memorize
+  VARIABLE_LIST = variables;
   return variables;
 }
 

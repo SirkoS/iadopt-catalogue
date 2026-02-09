@@ -1,6 +1,7 @@
-<script>
-  import parse from "$lib/util/model/parseJSONLD";
-  import DetailsNav from "./DetailsNav.svelte";
+<script lang="ts">
+  import { Entity } from '$lib/util/model/models';
+  import parse from '$lib/util/model/parseJSONLD';
+  import DetailsNav from './DetailsNav.svelte';
 
   let { data } = $props();
   // svelte-ignore state_referenced_locally
@@ -19,13 +20,13 @@
   <DetailsNav selected={data.path} variables={data.variableList}/>
 </nav>
 
-{#snippet subsection(/** @type {Entity} */ entity)}
+{#snippet subsection(entity : Entity)}
   {#if entity}
     <dd>
       {#if entity.getIri()}
-        <a href="{entity.getIri()}">{entity.getLabel()}</a>
+        <a href={entity.getIri()}>{entity.getLabel( false )}</a>
       {:else}
-        {entity.getLabel()}
+        {entity.getLabel() ?? entity.getShortIri()}
       {/if}
 
       {#if entity.getComment()}
@@ -73,7 +74,7 @@
 <main>
   <div>
     <section>
-      <h2>{variable.getLabel()}</h2>
+      <h2>{variable.getLabel( false )}</h2>
       <p class="links">
         {#if data.issue}
           <a href={data.issue} target="_blank" aria-label="Discuss on Github">
@@ -108,7 +109,7 @@
 
         {#if variable.getContextObjects().length > 0}
           <dt>Context Objects</dt>
-          {#each variable.getContextObjects() as context }
+          {#each variable.getContextObjects() as context (context.getIri())}
             {@render subsection( context ) }
           {/each}
         {/if}
@@ -130,7 +131,7 @@
         // remove the listener
         window.removeEventListener( 'message', updateVisSize );
       }
-      window.addEventListener( 'message', updateVisSize );
+      window.addEventListener( 'message', updateVisSize );;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     </script>
 
   </div>
