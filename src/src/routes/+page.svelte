@@ -15,7 +15,7 @@
     data: {
       variables: { [index: string]: Array<VariableList> }
     }
-  } = $props()
+  } = $props();
 
   // build navigation hierarchy
   const nav : Array<NavList> = [];
@@ -33,16 +33,16 @@
 </nav>
 
 <main>
-  {#each Object.entries( data.variables ) as [key, entries]}
+  {#each Object.entries( data.variables ) as [key, entries] (key)}
   <section>
     <h2 id="{key}">{key}</h2>
     <ul class="variable-list">
-      {#each entries as entry}
+      {#each entries as entry (entry.path)}
       <li class="variable-item">
         <article>
-          <h3><a href="{entry.path + '.html'}">{entry.title}</a></h3>
+          <h3><a href={entry.path + '.html'}>{entry.title}</a></h3>
           <p>{entry.comment}</p>
-          <a href="{entry.path}" class="download" title="Download RDF">
+          <a href={entry.path} class="download" title="Download RDF">
             <img src="rdf.svg" alt="Download RDF">
           </a>
         </article>

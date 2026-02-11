@@ -6,6 +6,9 @@ const config = {
     adapter: adapter({
       pages: process.env.TARGET_PATH ?? 'build',
     }),
+    prerender: {
+      handleMissingId: 'warn',
+    }
   },
 };
 
