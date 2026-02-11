@@ -1,7 +1,7 @@
 import { promises as Fs } from 'node:fs';
 import Path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parse } from 'yaml'
+import { parse } from 'yaml';
 
 export type SettingsType = {
   /** title on top of the page */
@@ -37,10 +37,11 @@ export async function getSettings() {
     return SETTINGS;
   }
 
+  let filePath;
   try {
 
     // path to file
-    const filePath = Path.join( PATH_ROOT, '.iadopt-catalogue.yml' );
+    filePath = Path.join( PATH_ROOT, '.iadopt-catalogue.yml' );
 
     // retrieve file content
     const raw = await Fs.readFile( filePath, 'utf8' );
@@ -56,7 +57,8 @@ export async function getSettings() {
     return SETTINGS;
 
   } catch (e) {
-    console.error( e )
+    console.error( `Could not find configuration at ${filePath}. Using defaults.` );
+    return SETTINGS;
   }
 
 }
