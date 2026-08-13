@@ -1,10 +1,11 @@
 <script lang="ts">
-  import type { NavList } from "./+page.svelte";
+  import type { SectionEntry } from '$lib/store/variable';
 
   let { nav } : {
-    nav: Array<NavList>,
+    nav: SectionEntry,
   } = $props();
 </script>
+
 
 <div class="navBox">
   <div class="navBoxHead">Filter</div>
@@ -54,18 +55,28 @@
   </div>
 </div>
 
+{#snippet navItem( item: SectionEntry )}
+  <li>
+    <!-- having to encode here but not in the corresponding anchor seems odd but it works ... -->
+    <a href={`#${encodeURIComponent(item.extLabel)}`}>
+      {item.label}
+    </a>
+    {#if Object.values(item.children).length}
+      <ul>
+        {#each Object.values( item.children ) as entry (entry.label)}
+          {@render navItem( entry ) }
+        {/each}
+      </ul>
+    {/if}
+  </li>
+{/snippet}
 
 <div class="navBox">
   <div class="navBoxHead">Navigation</div>
   <div class="navBoxBody">
     <ul>
-      {#each nav as entry}
-        <li>
-          <!-- having to encode here but not in the corresponding anchor seems odd but it works ... -->
-          <a href={`#${encodeURIComponent(entry.link)}`}>
-            {entry.label}
-          </a>
-        </li>
+      {#each Object.values( nav.children ) as entry (entry.label)}
+        {@render navItem( entry ) }
       {/each}
     </ul>
   </div>

@@ -2,6 +2,9 @@
 
 ## unreleased
 
+### Features
+* allow for nested folder structures in Variables
+
 ### Bugfixes
 * (De)serializing of blank node Entities with Constrains did not keep the proper link
 * Allow to configure certain settings via `.iadopt-catalogue.yml`

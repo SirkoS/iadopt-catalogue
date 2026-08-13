@@ -1,48 +1,31 @@
-<script module lang="ts">
-  export type NavList = {
-    label:      string,
-    link:       string,
-    children?:  Array<NavList>
-  }
-</script>
 <script lang="ts">
-  import type { VariableList } from '$lib/store/variable';
+  import type { SectionEntry } from '$lib/store/variable';
   import OverviewNav from './OverviewNav.svelte';
 
   let {
     data
   }: {
     data: {
-      variables: { [index: string]: Array<VariableList> }
+      variables: SectionEntry
     }
   } = $props();
-
-  // build navigation hierarchy
-  const nav : Array<NavList> = [];
-  // svelte-ignore state_referenced_locally
-  for( const [key, _] of Object.entries( data.variables ) ) {
-    nav.push({
-      label: key,
-      link: key,
-    });
-  }
 </script>
 
+
 <nav>
-  <OverviewNav nav={nav} />
+  <OverviewNav nav={data.variables} />
 </nav>
 
-<main>
-  {#each Object.entries( data.variables ) as [key, entries] (key)}
+{#snippet sectionItem(item: SectionEntry)}
   <section>
-    <h2 id="{key}">{key}</h2>
+    <h2 id="{item.extLabel}">{item.extLabel}</h2>
     <ul class="variable-list">
-      {#each entries as entry (entry.path)}
+      {#each item.variables as variable (variable.path)}
       <li class="variable-item">
         <article>
-          <h3><a href={entry.path + '.html'}>{entry.title}</a></h3>
-          <p>{entry.comment}</p>
-          <a href={entry.path} class="download" title="Download RDF">
+          <h3><a href={variable.path + '.html'}>{variable.title}</a></h3>
+          <p>{variable.comment}</p>
+          <a href={variable.path} class="download" title="Download RDF">
             <img src="rdf.svg" alt="Download RDF">
           </a>
         </article>
@@ -50,6 +33,14 @@
       {/each}
     </ul>
   </section>
+  {#each Object.values(item.children) as subitem (subitem.label)}
+    {@render sectionItem(subitem)}
+  {/each}
+{/snippet}
+
+<main>
+  {#each Object.values( data.variables.children ) as entry (entry.label)}
+    {@render sectionItem(entry)}
   {/each}
 </main>
 

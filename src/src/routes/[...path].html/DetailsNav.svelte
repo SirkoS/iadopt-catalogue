@@ -1,28 +1,37 @@
 <script lang="ts">
-  import type { VariableList } from "$lib/store/variable";
+  import type { SectionEntry } from '$lib/store/variable';
 
   let {
     selected,
     variables,
-   } : {
+  } : {
     selected: string,
-    variables: { [index: string]: Array<VariableList> },
+    variables: SectionEntry,
   } = $props();
 
   // determine base path
-  // svelte-ignore state_referenced_locally
-  const toBase = selected
-    .split( '/' )
-    .slice( 0, -1 )
-    .map( () => '..' )
-    .join( '/')
+  const toBase = $derived(
+    selected
+      .split( '/' )
+      .slice( 0, -1 )
+      .map( () => '..' )
+      .join( '/')
+  );
 
   // determine selected section
-  // svelte-ignore state_referenced_locally
-  const selectedSection = Object.keys( variables )
-    .find( (key) => variables[key].some( (v) => v.path == selected ) )
+  const selectedSections = $derived.by(() => {
+    const result = new Set();
+    const path = selected.split( '/' );
+    let runner = variables;
+    for( const el of path ) {
+      if( el in runner.children ) {
+        runner = runner.children[ el ];
+        result.add( runner.id );
+      }
+    }
+    return result;
+  });
 </script>
-
 <div class="navBox">
   <div class="navBoxHead">Filter</div>
   <div class="navBoxBody filterBody">
@@ -87,26 +96,37 @@
   </div>
 </div>
 
+{#snippet navItem( item: SectionEntry)}
+  <li class="navBoxSection">
+    <label for="checkBox{item.id}">
+      <i>{item.label}</i>
+    </label>
+    <input id="checkBox{item.id}" type="checkbox" checked={selectedSections.has( item.id )} />
+    <ul class="varlist">
+      {#each item.variables as variable (variable.path)}
+        <a href={(toBase ? `${toBase}/${variable.path}` : variable.path) + '.html'} class="navBoxItem">
+          <li class:selected={selected == variable.path}>
+              {variable.title}
+          </li>
+        </a>
+      {/each}
+    </ul>
+    {#if Object.values(item.children).length}
+      <ul>
+        {#each Object.values(item.children) as subitem (subitem.id)}
+          {@render navItem(subitem)}
+        {/each}
+      </ul>
+    {/if}
+  </li>
+{/snippet}
+
 <div class="navBox">
   <div class="navBoxHead">Navigation</div>
   <div class="navBoxBody">
     <ul>
-      {#each Object.keys(variables) as section}
-        <li class="navBoxSection">
-          <label for="checkBox{section}">
-            <i>{section}</i>
-          </label>
-          <input id="checkBox{section}" type="checkbox" checked={selectedSection == section} />
-          <ul>
-          {#each variables[section] as variable}
-          <a href={(toBase ? `${toBase}/${variable.path}` : variable.path) + '.html'} class="navBoxItem">
-            <li class:selected={selected == variable.path}>
-                {variable.title}
-            </li>
-          </a>
-          {/each}
-          </ul>
-        </li>
+      {#each Object.values(variables.children) as section (section.id)}
+        {@render navItem(section)}
       {/each}
     </ul>
   </div>
@@ -114,7 +134,7 @@
 
 <style>
 ul ul {
-  font-size: 90%;
+  font-size: 95%;
 }
 .selected {
   font-weight: bold;
@@ -132,6 +152,9 @@ ul ul {
   overflow-x: hidden;
 }
 
+.varlist {
+  list-style-type: disc;
+}
 ul li:has( input[type="checkbox"]:checked ) {
   list-style-type: disclosure-open;
 }

@@ -4,16 +4,16 @@
   import DetailsNav from './DetailsNav.svelte';
 
   let { data } = $props();
-  // svelte-ignore state_referenced_locally
-  const variable = parse( data.variable );
+  const variable = $derived( parse( data.variable ) );
 
   // determine base path
-  // svelte-ignore state_referenced_locally
-  const toBase = data.path
-    .split( '/' )
-    .slice( 0, -1 )
-    .map( () => '..' )
-    .join( '/')
+  const toBase = $derived(
+    data.path
+      .split( '/' )
+      .slice( 0, -1 )
+      .map( () => '..' )
+      .join( '/')
+  );
 </script>
 
 <nav>

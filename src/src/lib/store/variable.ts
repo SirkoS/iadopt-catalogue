@@ -7,7 +7,7 @@ import type { Variable } from '$lib/util/model/models';
 
 // memoization
 const VARIABLES : Record<string, Variable> = {};
-let VARIABLE_LIST :  Record< string, VariableList[] > | undefined = undefined;
+let VARIABLE_LIST :  SectionEntry | undefined = undefined;
 const PARSER_ERRORS : Record<string, unknown> = {};
 const RAWS : Record<string, string> = {};
 
@@ -27,19 +27,30 @@ export type VariableList = {
   section:  string,
   comment:  string,
 }
+export type SectionEntry = {
+  label:      string,
+  extLabel:   string,
+  id:         string,
+  variables:  VariableList[],
+  children:   Record< string, SectionEntry >,
+}
 
 
 /**
  * retrieve all Variables
  */
-export async function getVariables() : Promise<{ [index: string]: Array<VariableList> }> {
+export async function getVariables() : Promise< SectionEntry > {
 
   // short circuit
   if( VARIABLE_LIST ) {
     return VARIABLE_LIST;
   }
 
-  const variables : Record< string, VariableList[] > = {};
+  const result : SectionEntry = {
+    label:      'root',
+    variables:  [],
+    children:   {},
+  };
 
   // scan for RDF files
   for await(const rawFilePath of Fs.glob( '**/*.ttl', { cwd: PATH_ROOT } ) ) {
@@ -63,28 +74,38 @@ export async function getVariables() : Promise<{ [index: string]: Array<Variable
     }
 
     // add to results
-    const entry = {
+    const entry : VariableList = {
       title:    variable.getLabel() ?? variable.getShortIri(),
       comment:  variable.getComment(),
       path:     rawFilePath.replace( /\\/g, '/' ),  // use canonical web paths
       section:  Path.dirname( rawFilePath ),
     };
 
-    if( !(entry.section in variables) ) {
-      variables[entry.section] = [];
+    // add to tree
+    const sections = entry.section.split( Path.sep );
+    const path = [];
+    let runner : SectionEntry = result;
+    for( const section of sections ) {
+      path.push(section);
+      if( !(section in runner.children) ) {
+        runner.children[ section ] = {
+          label:      section,
+          extLabel:   path.join( ' - ' ),
+          id:         path.join( Path.sep ),
+          variables:  [],
+          children:   {}
+        };
+      }
+      runner = runner.children[ section ];
     }
-    variables[entry.section].push( entry );
+    runner.variables.push( entry );
 
-  }
-
-  // sort each entry by label
-  for( const key of Object.keys( variables ) ) {
-    variables[key].sort( (a,b) => a.title.localeCompare( b.title ) );
   }
 
   // memorize
-  VARIABLE_LIST = variables;
-  return variables;
+  VARIABLE_LIST = result;
+  return result;
+
 }
 
 
