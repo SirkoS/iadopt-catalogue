@@ -1,0 +1,6 @@
+allowBuilds:
+  esbuild: true
+  "@tailwindcss/oxide": true
+
+# only install dependencies 1 week after release
+minimumReleaseAge: 10080
