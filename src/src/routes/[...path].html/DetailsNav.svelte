@@ -103,7 +103,7 @@
     </label>
     <input id="checkBox{item.id}" type="checkbox" checked={selectedSections.has( item.id )} />
     <ul class="varlist">
-      {#each item.variables as variable (variable.path)}
+      {#each item.variables.sort( (a,b) => a.title.localeCompare( b.title )) as variable (variable.path)}
         <a href={(toBase ? `${toBase}/${variable.path}` : variable.path) + '.html'} class="navBoxItem">
           <li class:selected={selected == variable.path}>
               {variable.title}
@@ -113,7 +113,7 @@
     </ul>
     {#if Object.values(item.children).length}
       <ul>
-        {#each Object.values(item.children) as subitem (subitem.id)}
+        {#each Object.values(item.children).sort( (a,b) => a.label.localeCompare( b.label )) as subitem (subitem.id)}
           {@render navItem(subitem)}
         {/each}
       </ul>
@@ -125,7 +125,7 @@
   <div class="navBoxHead">Navigation</div>
   <div class="navBoxBody" style="overflow-y: auto;">
     <ul>
-      {#each Object.values(variables.children) as section (section.id)}
+      {#each Object.values(variables.children).sort( (a,b) => a.label.localeCompare( b.label )) as section (section.id)}
         {@render navItem(section)}
       {/each}
     </ul>
@@ -153,7 +153,7 @@ ul ul {
 .varlist {
   list-style-type: disc;
 }
-ul li:has( input[type="checkbox"]:checked ) {
+ul li:has(> input[type="checkbox"]:checked ) {
   list-style-type: disclosure-open;
 }
 label {

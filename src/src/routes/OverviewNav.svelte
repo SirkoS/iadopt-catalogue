@@ -63,7 +63,7 @@
     </a>
     {#if Object.values(item.children).length}
       <ul>
-        {#each Object.values( item.children ) as entry (entry.label)}
+        {#each Object.values( item.children ).sort( (a,b) => a.label.localeCompare( b.label )) as entry (entry.label)}
           {@render navItem( entry ) }
         {/each}
       </ul>
@@ -75,7 +75,7 @@
   <div class="navBoxHead">Navigation</div>
   <div class="navBoxBody" style="overflow-y: auto;">
     <ul>
-      {#each Object.values( nav.children ) as entry (entry.label)}
+      {#each Object.values( nav.children ).sort( (a,b) => a.label.localeCompare( b.label )) as entry (entry.label)}
         {@render navItem( entry ) }
       {/each}
     </ul>
