@@ -71,9 +71,9 @@
   </li>
 {/snippet}
 
-<div class="navBox">
+<div class="navBox menu">
   <div class="navBoxHead">Navigation</div>
-  <div class="navBoxBody">
+  <div class="navBoxBody" style="overflow-y: auto;">
     <ul>
       {#each Object.values( nav.children ) as entry (entry.label)}
         {@render navItem( entry ) }
@@ -84,7 +84,12 @@
 
 <style>
 .navBox {
-  margin-bottom: 2em;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.menu {
+  overflow: hidden;
 }
 
 .filterBody {

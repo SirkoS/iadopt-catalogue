@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { SettingsType } from "$lib/store/settings";
-  import type { Snippet } from "svelte";
+  import type { SettingsType } from '$lib/store/settings';
+  import type { Snippet } from 'svelte';
 
   // fetch remaining content
   let {
@@ -11,7 +11,7 @@
     data: {
       settings: SettingsType
     },
-  } = $props()
+  } = $props();
 </script>
 
 <svelte:head>
@@ -55,7 +55,9 @@ header {
 
 :global(nav) {
   padding: 1em;
-  grid-area: "nav";
+  grid-area: nav;
+  display: flex;
+  flex-direction: column;
 }
 
 :global(main) {

@@ -121,9 +121,9 @@
   </li>
 {/snippet}
 
-<div class="navBox">
+<div class="navBox menu">
   <div class="navBoxHead">Navigation</div>
-  <div class="navBoxBody">
+  <div class="navBoxBody" style="overflow-y: auto;">
     <ul>
       {#each Object.values(variables.children) as section (section.id)}
         {@render navItem(section)}
@@ -143,13 +143,11 @@ ul ul {
 
 .navBox {
   max-height: 100%;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
-.navBoxBody {
-  overflow-y: auto;
-  overflow-x: hidden;
+.menu {
+  overflow: hidden;
 }
 
 .varlist {
@@ -172,5 +170,13 @@ input[type=checkbox] {
 }
 :global(.hidden) {
   display: none;
+}
+
+.filterBody {
+  text-align: center;
+}
+.filterBody input {
+  width:   80%;
+  padding: 5px 10px;
 }
 </style>
