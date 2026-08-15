@@ -21,15 +21,15 @@
     <h2 id="{item.extLabel}">{item.extLabel}</h2>
     <ul class="variable-list">
       {#each item.variables as variable (variable.path)}
-      <li class="variable-item">
-        <article>
-          <h3><a href={variable.path + '.html'}>{variable.title}</a></h3>
-          <p>{variable.comment}</p>
-          <a href={variable.path} class="download" title="Download RDF">
-            <img src="rdf.svg" alt="Download RDF">
-          </a>
-        </article>
-      </li>
+        <li class="variable-item">
+          <article>
+            <h3><a href={variable.path + '.html'}>{variable.title}</a></h3>
+            <p>{variable.comment}</p>
+            <a href={variable.path} class="download" title="Download RDF">
+              <img src="rdf.svg" alt="Download RDF">
+            </a>
+          </article>
+        </li>
       {/each}
     </ul>
   </section>

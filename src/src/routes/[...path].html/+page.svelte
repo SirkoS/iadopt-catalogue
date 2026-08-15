@@ -30,9 +30,9 @@
       {/if}
 
       {#if entity.getComment()}
-      <p class="desc">
-        {entity.getComment()}
-      </p>
+        <p class="desc">
+          {entity.getComment()}
+        </p>
       {/if}
 
       {#if entity.getConstraints().length > 0}
@@ -124,12 +124,12 @@
     ></iframe>
     <script>
       function updateVisSize( ev ) {
-        // set the proper iframe ratio
-        const iframe = document.querySelector( 'iframe' );
-        const ratio = ev.data.width / ev.data.height;
-        iframe.style.aspectRatio = ratio;
-        // remove the listener
-        window.removeEventListener( 'message', updateVisSize );
+      // set the proper iframe ratio
+      const iframe = document.querySelector( 'iframe' );
+      const ratio = ev.data.width / ev.data.height;
+      iframe.style.aspectRatio = ratio;
+      // remove the listener
+      window.removeEventListener( 'message', updateVisSize );
       }
       window.addEventListener( 'message', updateVisSize );;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     </script>

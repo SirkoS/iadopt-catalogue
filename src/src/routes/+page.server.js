@@ -1,4 +1,4 @@
-import { getVariables, PATH_ROOT } from "$lib/store/variable";
+import { getVariables, PATH_ROOT } from '$lib/store/variable';
 
 export async function load() {
   return {

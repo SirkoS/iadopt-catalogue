@@ -9,6 +9,7 @@ ENV TARGET_PATH="/github/workspace/build"
 
 # install dependencies
 COPY src/pnpm-lock.yaml /home/iadopt-catalog/
+COPY src/pnpm-workspace.yaml /home/iadopt-catalog/
 COPY src/package.json /home/iadopt-catalog/
 RUN cd /home/iadopt-catalog/ && pnpm i
 

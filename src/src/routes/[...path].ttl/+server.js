@@ -10,9 +10,9 @@ export async function GET({ params }) {
   const raw = await getRaw( params.path + '.ttl' );
 
   return new Response( raw, {
-		headers: {
-			'Content-Type': 'text/turtle'
-		}
-	});
+    headers: {
+      'Content-Type': 'text/turtle'
+    }
+  });
 
 };
