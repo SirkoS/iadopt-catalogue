@@ -164,10 +164,10 @@ label {
 input[type=checkbox] {
   display: none;
 }
-:global( .navBox input[type="checkbox"] + ul ) {
+:global( .navBox input[type="checkbox"] ~ ul ) {
   display: none;
 }
-:global( .navBox input[type="checkbox"]:checked + ul ) {
+:global( .navBox input[type="checkbox"]:checked ~ ul ) {
   display: block;
 }
 :global(.hidden) {

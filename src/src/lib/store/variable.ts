@@ -91,7 +91,7 @@ export async function getVariables() : Promise< SectionEntry > {
         runner.children[ section ] = {
           label:      section,
           extLabel:   path.join( ' - ' ),
-          id:         path.join( Path.sep ),
+          id:         path.join( Path.sep ).replace(/[^a-zA-Z0-9]/gi, '' ),
           variables:  [],
           children:   {}
         };
