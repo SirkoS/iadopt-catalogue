@@ -25,6 +25,9 @@ let SETTINGS_LOADED = false;
 // https://stackoverflow.com/a/55944697/1169798
 const pathComponents = Path.dirname( fileURLToPath(import.meta.url) ).split( Path.sep );
 while( (pathComponents.length > 0) && (pathComponents.pop() != 'src' ) ) {}
+if( pathComponents.at(-1) == 'src' ) {
+  pathComponents.pop();
+}
 export const PATH_ROOT = process.env.SOURCE_PATH
   ? process.env.SOURCE_PATH
   : Path.join( ... pathComponents, 'test' );
@@ -56,7 +59,7 @@ export async function getSettings() {
 
     return SETTINGS;
 
-  } catch (e) {
+  } catch {
     console.error( `Could not find configuration at ${filePath}. Using defaults.` );
     return SETTINGS;
   }

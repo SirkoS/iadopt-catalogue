@@ -3,6 +3,7 @@ import { promises as Fs } from 'node:fs';
 import Path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Variable } from '$lib/util/model/models';
+import { PATH_ROOT } from './settings';
 
 
 // memoization
@@ -11,14 +12,6 @@ let VARIABLE_LIST :  SectionEntry | undefined = undefined;
 const PARSER_ERRORS : Record<string, unknown> = {};
 const RAWS : Record<string, string> = {};
 
-
-// root path to load RDF-files
-// https://stackoverflow.com/a/55944697/1169798
-const pathComponents = Path.dirname( fileURLToPath(import.meta.url) ).split( Path.sep );
-while( (pathComponents.length > 0) && (pathComponents.pop() != 'src' ) ) {}
-export const PATH_ROOT = process.env.SOURCE_PATH
-  ? process.env.SOURCE_PATH
-  : Path.join( ... pathComponents, 'test' );
 
 
 export type VariableList = {
@@ -48,6 +41,8 @@ export async function getVariables() : Promise< SectionEntry > {
 
   const result : SectionEntry = {
     label:      'root',
+    extLabel:   'root',
+    id:         'root',
     variables:  [],
     children:   {},
   };
