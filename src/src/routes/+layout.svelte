@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { SettingsType } from '$lib/store/settings';
   import type { Snippet } from 'svelte';
+  import { asset, resolve } from '$app/paths';
 
   // fetch remaining content
   let {
@@ -21,8 +22,15 @@
 
 <div class="container">
   <header>
-    <h1>{@html data.settings.title}</h1>
-    <p>{@html data.settings.subtitle}</p>
+    <div class="logo">
+      <a href={resolve('/')}>
+        <img src={asset('/logo.svg')} alt={data.settings.title}>
+      </a>
+    </div>
+    <div class="heading">
+      <h1>{@html data.settings.title}</h1>
+      <p>{@html data.settings.subtitle}</p>
+    </div>
   </header>
 
   {@render children?.()}
@@ -49,8 +57,26 @@
 header {
   background-color: #333;
   color: #fff;
-  text-align: center;
+  text-align: left;
   grid-area: top;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+header .logo {
+  display: inline-block;
+  margin: 0 2em;
+}
+header .logo img {
+  height: 4lh;
+}
+
+header .heading {
+  display: inline-block;
+  text-align: center;
+  flex-grow: 1;
 }
 
 :global(nav) {
