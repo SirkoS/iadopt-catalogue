@@ -7,6 +7,7 @@
 * added logo
 * support subfolders in nav bars
 * alphabetic sorting in nav bars
+* move to flowbite & tailwindcss
 
 ### Bugfixes
 * (De)serializing of blank node Entities with Constrains did not keep the proper link

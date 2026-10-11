@@ -1,164 +1,78 @@
 <script lang="ts">
+  import SidebarBox from '$lib/components/SidebarBox.svelte';
   import type { SectionEntry } from '$lib/store/variable';
+  import filter from '$lib/util/filter';
+  import { Input, Li, List } from 'flowbite-svelte';
+  import { resolve } from '$app/paths';
+
 
   let {
     selected,
-    variables,
+    items,
+    showVariables = true,
   } : {
     selected: string,
-    variables: SectionEntry,
+    items: SectionEntry,
+    showVariables: boolean,
   } = $props();
 
-  // determine base path
-  const toBase = $derived(
-    selected
-      .split( '/' )
-      .slice( 0, -1 )
-      .map( () => '..' )
-      .join( '/')
-  );
-
-  // determine selected section
-  const selectedSections = $derived.by(() => {
-    const result = new Set();
-    const path = selected.split( '/' );
-    let runner = variables;
-    for( const el of path ) {
-      if( el in runner.children ) {
-        runner = runner.children[ el ];
-        result.add( runner.id );
-      }
-    }
-    return result;
-  });
+  // filter
+  let needle = $state('');
+  const hidden = $derived( filter( items, { keyword: needle } ) );
 </script>
-<div class="navBox">
-  <div class="navBoxHead">Filter</div>
-  <div class="navBoxBody filterBody">
-    <input type="text" id="filter" placeholder="Filter Variables ..."/>
-    <script>
-      (function(){
-
-        // schedule update of filter
-        let filterTimer = null;
-        document.querySelector( '#filter' )
-          ?.addEventListener( 'input', () => {
-            if ( filterTimer ) {
-              clearTimeout( filterTimer );
-            }
-            filterTimer = setTimeout( triggerFilter, 200 );
-          } );
 
 
-        function triggerFilter() {
-
-          // get filter term
-          const term = document.querySelector( '#filter' )?.value?.toLowerCase() || null;
-
-          // visibility entries
-          for( const entry of document.querySelectorAll( '.navBoxItem') ) {
-
-            if( term ) {
-
-              // only show, if filter term is included
-              if( ! entry.textContent?.toLowerCase().includes( term ) ) {
-                entry.classList.add( 'hidden' );
-              } else {
-                entry.classList.remove( 'hidden' );
-              }
-
-            } else {
-
-              // if no filter term is set, show all entries
-              entry.classList.remove( 'hidden' );
-
-            }
-          }
-
-          // visibility categories
-          for( const entry of document.querySelectorAll( '.navBoxSection') ) {
-
-            if( term ) {
-
-              entry.querySelector( 'input[type="checkbox"]' ).checked = true;
-
-            } else {
-
-              entry.querySelector( 'input[type="checkbox"]' ).checked = !!entry.querySelector( 'li.selected' );
-
-            }
-          }
-
-        }
-
-      })();
-    </script>
+<SidebarBox title="Variables" classes="navBox flex flex-col pr-0">
+  <div class="pr-4">
+    <Input bind:value={needle} placeholder="Filter ..."/>
   </div>
-</div>
+
+  <div class="mt-5 max-h-full overflow-y-auto overflow-x-hidden p-4">
+    <List class="list-[disclosure-closed] ml-5 list-outside catList">
+      {#each Object.values( items.children ).sort( (a,b) => a.label.localeCompare( b.label )) as entry (entry.label)}
+        {#if !hidden.has( entry ) }
+          {@render navItem( entry ) }
+        {/if}
+      {/each}
+    </List>
+  </div>
+</SidebarBox>
+
 
 {#snippet navItem( item: SectionEntry)}
-  <li class="navBoxSection">
-    <label for="checkBox{item.id}">
-      <i>{item.label}</i>
-    </label>
-    <input id="checkBox{item.id}" type="checkbox" checked={selectedSections.has( item.id )} />
-    <ul class="varlist">
-      {#each item.variables.sort( (a,b) => a.title.localeCompare( b.title )) as variable (variable.path)}
-        <a href={(toBase ? `${toBase}/${variable.path}` : variable.path) + '.html'} class="navBoxItem">
-          <li class:selected={selected == variable.path}>
-              {variable.title}
-          </li>
-        </a>
-      {/each}
-    </ul>
+  <Li>
+    <label class="cursor-pointer italic" for="checkBox{item.id}">{item.label}</label>
+    <input id="checkBox{item.id}" type="checkbox" checked={true} />
+
     {#if Object.values(item.children).length}
-      <ul>
+      <List class="ml-4 list-outside text-[95%] catList">
         {#each Object.values(item.children).sort( (a,b) => a.label.localeCompare( b.label )) as subitem (subitem.id)}
-          {@render navItem(subitem)}
+          {#if !hidden.has(subitem)}
+            {@render navItem(subitem)}
+          {/if}
         {/each}
-      </ul>
+      </List>
     {/if}
-  </li>
+
+    {#if showVariables && Object.values(item.variables).length}
+      <List class="ml-4 list-[square] list-outside text-[95%]">
+        {#each item.variables.sort( (a,b) => a.title.localeCompare( b.title )) as variable (variable.path)}
+          {#if !hidden.has( variable )}
+            <a href={resolve(`/${variable.path}.html`)}>
+              <Li class={((selected == variable.path) ? 'font-bold' : '' )}>
+                {variable.title}
+              </Li>
+            </a>
+          {/if}
+        {/each}
+      </List>
+    {/if}
+
+  </Li>
 {/snippet}
 
-<div class="navBox menu">
-  <div class="navBoxHead">Navigation</div>
-  <div class="navBoxBody" style="overflow-y: auto;">
-    <ul>
-      {#each Object.values(variables.children).sort( (a,b) => a.label.localeCompare( b.label )) as section (section.id)}
-        {@render navItem(section)}
-      {/each}
-    </ul>
-  </div>
-</div>
 
 <style>
-ul ul {
-  font-size: 95%;
-}
-.selected {
-  font-weight: bold;
-}
-
-
-.navBox {
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-.menu {
-  overflow: hidden;
-}
-
-.varlist {
-  list-style-type: disc;
-}
-ul li:has(> input[type="checkbox"]:checked ) {
-  list-style-type: disclosure-open;
-}
-label {
-  cursor: pointer;
-}
 input[type=checkbox] {
   display: none;
 }
@@ -168,15 +82,10 @@ input[type=checkbox] {
 :global( .navBox input[type="checkbox"]:checked ~ ul ) {
   display: block;
 }
-:global(.hidden) {
-  display: none;
+:global( .navBox ul.catList > li ) {
+  list-style-type: disclosure-closed;
 }
-
-.filterBody {
-  text-align: center;
-}
-.filterBody input {
-  width:   80%;
-  padding: 5px 10px;
+:global( .navBox ul.catList > li:has(> input[type="checkbox"]:checked ) ) {
+  list-style-type: disclosure-open;
 }
 </style>

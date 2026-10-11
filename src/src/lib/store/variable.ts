@@ -1,7 +1,6 @@
 import extract from '$lib/util/extract.js';
 import { promises as Fs } from 'node:fs';
 import Path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import type { Variable } from '$lib/util/model/models';
 import { PATH_ROOT } from './settings';
 

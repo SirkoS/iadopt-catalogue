@@ -20,63 +20,44 @@
 </svelte:head>
 
 
-<div class="container">
-  <header>
-    <div class="logo">
+<div id="container" class="
+  font-sans h-full
+  text-gray       bg-gray-100
+  dark:text-white dark:bg-gray-500
+">
+  <header class="text-left flex flex-row items-center">
+    <div class="inline-block mx-[2em]">
       <a href={resolve('/')}>
-        <img src={asset('/logo.svg')} alt={data.settings.title}>
+        <img src={asset('/logo.svg')} alt={data.settings.title} class="h-[4lh]">
       </a>
     </div>
-    <div class="heading">
-      <h1>{@html data.settings.title}</h1>
-      <p>{@html data.settings.subtitle}</p>
+    <div class="inline-block text-center flex-grow">
+      <h1 class="mb-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{@html data.settings.title}</h1>
+      <p  class="mb-2 text-xl  font-medium tracking-tight text-gray-700 dark:text-gray-400">{@html data.settings.subtitle}</p>
     </div>
   </header>
 
   {@render children?.()}
 
 
-  <footer>
+  <footer class="flex flex-col items-center justify-center">
     <p>{@html data.settings.footer}</p>
   </footer>
 </div>
 
 <style>
-.container {
-  height: 100%;
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
-  line-height: 1.6;
+#container {
   display: grid;
-  grid-template-columns: 300px calc( 100% - 300px );
+  grid-template-columns: 350px calc( 100% - 350px );
   grid-template-rows: 150px calc( 100% - 210px ) 60px;
-  grid-template-areas: "top top" "nav center" "bottom bottom";
+  grid-template-areas: "top top top" "nav center side" "bottom bottom bottom";
 }
 
 header {
-  background-color: #333;
-  color: #fff;
-  text-align: left;
   grid-area: top;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 }
-
-header .logo {
-  display: inline-block;
-  margin: 0 2em;
-}
-header .logo img {
-  height: 4lh;
-}
-
-header .heading {
-  display: inline-block;
-  text-align: center;
-  flex-grow: 1;
+footer {
+  grid-area: bottom;
 }
 
 :global(nav) {
@@ -90,41 +71,5 @@ header .heading {
   grid-area: center;
   padding: 1em;
   overflow: auto;
-}
-
-footer {
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  padding: 10px 0;
-  grid-area: bottom;
-}
-:global(footer *) {
-  color: #fff;
-}
-
-:global(.navBox) {
-  background: #fff;
-  margin: 10px 0;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-:global(.navBoxHead) {
-  padding: 5px;
-  background: #ccc;
-  text-align: center;
-  font-weight: bold;
-}
-:global(.navBoxBody) {
-  padding: 5px;
-}
-:global(.navBoxBody ul) {
-  list-style-type:     disclosure-closed;
-  list-style-position: outside;
-  padding-left:        2em;
-}
-:global(.navBox a) {
-  text-decoration: none;
-  color: inherit;
 }
 </style>
