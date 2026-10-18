@@ -1,4 +1,4 @@
-import { getRaw } from '$lib/store/variable.js';
+import { getRaw } from '#lib/store/variable.js';
 
 export const prerender = true;
 

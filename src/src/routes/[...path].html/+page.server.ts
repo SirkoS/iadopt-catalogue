@@ -1,5 +1,5 @@
-import { getVariable, getVariables } from '$lib/store/variable.js';
-import toJSONLD from '$lib/util/model/toJSONLD';
+import { getVariable, getVariables } from '#lib/store/variable.js';
+import toJSONLD from '#lib/util/model/toJSONLD.js';
 
 export async function load({ params }) {
 

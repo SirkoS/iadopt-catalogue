@@ -1,7 +1,7 @@
 <script lang="ts">
-  import SidebarBox from '$lib/components/SidebarBox.svelte';
-  import type { SectionEntry } from '$lib/store/variable';
-  import filter from '$lib/util/filter';
+  import SidebarBox from '#lib/components/SidebarBox.svelte';
+  import type { SectionEntry } from '#lib/store/variable.js';
+  import filter from '#lib/util/filter.js';
   import { Input, Li, List } from 'flowbite-svelte';
   import { resolve } from '$app/paths';
 

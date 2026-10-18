@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { SectionEntry } from '$lib/store/variable';
+  import type { SectionEntry } from '#lib/store/variable.js';
   import OverviewNav from './OverviewNav.svelte';
-  import Variable from '$lib/components/search/Variable.svelte';
+  import Variable from '#lib/components/search/Variable.svelte';
 
   let {
     data

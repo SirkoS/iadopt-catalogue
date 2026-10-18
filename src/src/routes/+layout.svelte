@@ -1,18 +1,10 @@
 <script lang="ts">
-  import type { SettingsType } from '$lib/store/settings';
+  import type { SettingsType } from '#lib/store/settings.js';
   import type { Snippet } from 'svelte';
   import { asset, resolve } from '$app/paths';
 
   // fetch remaining content
-  let {
-    children,
-    data,
-  }: {
-    children?: Snippet,
-    data: {
-      settings: SettingsType
-    },
-  } = $props();
+  let { children, data }: { children?: Snippet; data: { settings: SettingsType } } = $props();
 </script>
 
 <svelte:head>
@@ -28,7 +20,11 @@
   <header class="text-left flex flex-row items-center">
     <div class="inline-block mx-[2em]">
       <a href={resolve('/')}>
-        <img src={asset('/logo.svg')} alt={data.settings.title} class="h-[4lh]">
+        <img
+          src={asset('logo.svg')}
+          alt={data.settings.title}
+          class="h-[4lh]"
+        />
       </a>
     </div>
     <div class="inline-block text-center flex-grow">
@@ -53,23 +49,23 @@
   grid-template-areas: "top top top" "nav center side" "bottom bottom bottom";
 }
 
-header {
-  grid-area: top;
-}
-footer {
-  grid-area: bottom;
-}
+  header {
+    grid-area: top;
+  }
+  footer {
+    grid-area: bottom;
+  }
 
-:global(nav) {
-  padding: 1em;
-  grid-area: nav;
-  display: flex;
-  flex-direction: column;
-}
+  :global(nav) {
+    padding: 1em;
+    grid-area: nav;
+    display: flex;
+    flex-direction: column;
+  }
 
-:global(main) {
-  grid-area: center;
-  padding: 1em;
-  overflow: auto;
-}
+  :global(main) {
+    grid-area: center;
+    padding: 1em;
+    overflow: auto;
+  }
 </style>

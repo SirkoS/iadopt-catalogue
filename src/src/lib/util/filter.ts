@@ -1,4 +1,4 @@
-import type { SectionEntry, VariableList } from '$lib/store/variable';
+import type { SectionEntry, VariableList } from '#lib/store/variable.js';
 
 type FilterOption = {
   keyword: string,

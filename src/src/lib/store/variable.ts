@@ -1,7 +1,7 @@
-import extract from '$lib/util/extract.js';
+import extract from '#lib/util/extract.js';
 import { promises as Fs } from 'node:fs';
 import Path from 'node:path';
-import type { Variable } from '$lib/util/model/models';
+import type { Variable } from '#lib/util/model/models.js';
 import { PATH_ROOT } from './settings';
 
 
