@@ -10,7 +10,7 @@
 
   // filter
   let needle = $state('');
-  const hidden = $derived( filter( nav, { keyword: needle } ) );
+  const hidden = $derived( filter( nav, { keyword: [ needle ] } ) );
 </script>
 
 

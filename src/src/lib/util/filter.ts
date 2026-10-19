@@ -1,7 +1,7 @@
 import type { SectionEntry, VariableList } from '#lib/store/variable.js';
 
-type FilterOption = {
-  keyword: string,
+export type FilterOption = {
+  keyword: string[],
 }
 
 /**
@@ -10,14 +10,19 @@ type FilterOption = {
 export default function filter( item: SectionEntry, needles: FilterOption ) : Set<SectionEntry | VariableList>{
 
   // normalize input
-  needles.keyword = needles?.keyword?.toLocaleLowerCase();
+  needles.keyword = needles?.keyword?.map( (l) => l.toLocaleLowerCase() );
 
   // collect hidden items
   let result = new Set<SectionEntry | VariableList>();
 
+  // short-circuit for no filter
+  if ( !needles.keyword || !needles.keyword.length ) {
+    return result;
+  }
+
   // check node itself
   // if this hits, all children remain visible
-  if( item.label?.toLocaleLowerCase().includes( needles.keyword ) ) {
+  if( needles?.keyword?.some( (k) => item.label?.toLocaleLowerCase().includes( k ) ) ) {
     return result;
   }
 
@@ -30,11 +35,21 @@ export default function filter( item: SectionEntry, needles: FilterOption ) : Se
   let hasVisibleVariable = false;
   if( item.variables?.length ) {
     for( const variable of item.variables ) {
-      if( !variable.title?.toLocaleLowerCase().includes( needles.keyword ) ) {
+
+      const variableLabel = variable.label?.toLocaleLowerCase();
+      const variableDesc  = variable.comment?.toLocaleLowerCase();
+      if(
+        // check in title
+        !needles?.keyword?.some( (k) => variableLabel.includes( k ) )
+        // check in description
+        && !needles?.keyword?.some( (k) => variableDesc.includes( k ) )
+      ) {
         result.add( variable );
       } else {
         hasVisibleVariable = true;
       }
+
+
     }
   }
 

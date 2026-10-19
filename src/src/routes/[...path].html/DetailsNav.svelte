@@ -18,7 +18,7 @@
 
   // filter
   let needle = $state('');
-  const hidden = $derived( filter( items, { keyword: needle } ) );
+  const hidden = $derived( filter( items, { keyword: [ needle ] } ) );
 </script>
 
 
@@ -56,11 +56,11 @@
 
     {#if showVariables && Object.values(item.variables).length}
       <List class="ml-4 list-[square] list-outside text-[95%]">
-        {#each item.variables.sort( (a,b) => a.title.localeCompare( b.title )) as variable (variable.path)}
+        {#each item.variables.sort( (a,b) => a.label.localeCompare( b.label )) as variable (variable.path)}
           {#if !hidden.has( variable )}
             <a href={resolve(`/${variable.path}.html`)}>
               <Li class={((selected == variable.path) ? 'font-bold' : '' )}>
-                {variable.title}
+                {variable.label}
               </Li>
             </a>
           {/if}

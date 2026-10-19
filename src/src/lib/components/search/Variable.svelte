@@ -10,7 +10,7 @@
 <Card class="p-2 sm:p-4 md:p-6 mb-5 max-w-full">
   <a href={resolve(`/${variable.path}.html`)}>
     <h5 class="mb-2 text-xl font-bold tracking-tight">
-      {variable.title}
+      {variable.label}
     </h5>
     <p class="leading-tight italic text-gray-700 dark:text-gray-400">
       {variable.comment}

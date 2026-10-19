@@ -14,7 +14,7 @@ const RAWS : Record<string, string> = {};
 
 
 export type VariableList = {
-  title:    string,
+  label:    string,
   path:     string,
   section:  string,
   comment:  string,
@@ -69,7 +69,7 @@ export async function getVariables() : Promise< SectionEntry > {
 
     // add to results
     const entry : VariableList = {
-      title:    variable.getLabel() ?? variable.getShortIri(),
+      label:    variable.getLabel() ?? variable.getShortIri(),
       comment:  variable.getComment(),
       path:     rawFilePath.replace( /\\/g, '/' ),  // use canonical web paths
       section:  Path.dirname( rawFilePath ),

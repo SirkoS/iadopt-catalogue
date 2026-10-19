@@ -38,3 +38,48 @@
     display: none;
   }
 }
+
+:root {
+  --color-keyword-main:  #2D760033;
+  --color-keyword-light: #60A917;
+  --color-keyword-dark:  #2D7600;
+
+  --color-variable-main:  #2D7600;
+  --color-variable-light: #60A917;
+  --color-variable-dark:  #2D7600;
+
+  --color-property-main:  #B266FF;
+  --color-property-light: #E1D5E7;
+  --color-property-dark:  #B266FF;
+
+  --color-entity-main:  #6C8EBF;
+  --color-entity-light: #DAE8FC;
+  --color-entity-dark:  #6C8EBF;
+
+  --color-ooi-main:     #a1c5f7;
+  --color-matrix-main:  #b8d3f9;
+  --color-context-main: #d0e2fb;
+
+  --color-statmod-main:  #666666;
+  --color-statmod-light: #DDDDDD;
+  --color-statmod-dark:  #666666;
+
+  --color-constraint-main:  #B85450;
+  --color-constraint-light: #F8CECC;
+  --color-constraint-dark:  #B85450;
+}
+
+
+.iadopt.bg.keyword   { background-color: var(--color-keyword-light); }
+.iadopt.bg.property  { background-color: var(--color-property-main); }
+.iadopt.bg.ooi       { background-color: var(--color-ooi-main); }
+.iadopt.bg.matrix    { background-color: var(--color-matrix-main); }
+.iadopt.bg.context   { background-color: var(--color-context-main); }
+.iadopt.bg.statmod   { background-color: var(--color-statmod-light); }
+
+.iadopt.border.keyword   { border-color: var(--color-keyword-dark); }
+.iadopt.border.property  { border-color: var(--color-property-dark); }
+.iadopt.border.ooi       { border-color: var(--color-ooi-dark); }
+.iadopt.border.matrix    { border-color: var(--color-matrix-dark); }
+.iadopt.border.context   { border-color: var(--color-context-dark); }
+.iadopt.border.statmod   { border-color: var(--color-statmod-dark); }
