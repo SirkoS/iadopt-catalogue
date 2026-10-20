@@ -16,7 +16,9 @@
       {variable.comment}
     </p>
   </a>
-  <a href={resolve(`/${variable.path}`)} class="mt-2 inline" title="Download RDF" target="_blank">
-    <img src="rdf.svg" class="h-[1rem] inline" alt="Download RDF">
-  </a>
+  <div>
+    <a href={resolve(`/${variable.path}`)} class="mt-2 inline-block" title="Download RDF" target="_blank">
+      <img src="rdf.svg" class="h-[1rem]" alt="Download RDF">
+    </a>
+  </div>
 </Card>
