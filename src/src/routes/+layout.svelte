@@ -35,19 +35,22 @@
 
   {@render children?.()}
 
-
   <footer class="flex flex-col items-center justify-center">
     <p>{@html data.settings.footer}</p>
   </footer>
 </div>
 
 <style>
-#container {
-  display: grid;
-  grid-template-columns: 350px calc( 100% - 350px );
-  grid-template-rows: 150px calc( 100% - 210px ) 60px;
-  grid-template-areas: "top top top" "nav center side" "bottom bottom bottom";
-}
+
+  #container {
+    display: grid;
+    grid-template-columns: 350px calc( 100% - 350px );
+    grid-template-rows: 150px 1fr 1fr 60px;
+    grid-template-areas:  "top top"
+                          "nav center"
+                          "nav side"
+                          "bottom bottom";
+  }
 
   header {
     grid-area: top;
@@ -67,5 +70,30 @@
     grid-area: center;
     padding: 1em;
     overflow: auto;
+  }
+
+  :global(aside) {
+    grid-area: side;
+    padding: 1em;
+    overflow: auto;
+  }
+
+  @media (min-width: 1400px) {
+
+    #container {
+      display: grid;
+      grid-template-columns: 400px calc( 100% - 850px ) 450px ;
+      grid-template-rows: 150px calc( 100% - 210px ) 60px;
+      grid-template-areas:  "top top top"
+                            "nav center side"
+                            "bottom bottom bottom";
+    }
+
+    :global(aside) {
+      margin-right: 2em;
+    }
+    :global(nav) {
+      margin-left: 2em;
+    }
   }
 </style>

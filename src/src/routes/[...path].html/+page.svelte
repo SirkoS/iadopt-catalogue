@@ -4,6 +4,7 @@
   import { asset, resolve } from '$app/paths';
   import parse from '#lib/util/model/parseJSONLD.js';
   import DetailsNav from './DetailsNav.svelte';
+  import Related from './Related.svelte';
 
   let { data } = $props();
   const variable = $derived( parse( data.variable ) );
@@ -65,6 +66,7 @@
 
 
 <main class="flex flex-col items-center">
+
   <Card class="p-2 sm:p-4 md:p-6 mb-5 max-w-5xl flex flex-col items-center">
     <h2 class="text-2xl font-bold tracking-tight">{variable.getLabel(false)}</h2>
 
@@ -140,6 +142,9 @@
 
 </main>
 
+<aside>
+  <Related data={data.related} />
+</aside>
 
 <style>
 dt {

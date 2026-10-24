@@ -4,14 +4,15 @@ import toJSONLD from '#lib/util/model/toJSONLD.js';
 export async function load({ params }) {
 
   // get corresponding variable
-  const variable = await getVariable( params.path.replace( '.html', '' ) );
+  const data = await getVariable( params.path.replace( '.html', '' ) );
 
   // pass everything on
   return {
     path:         params.path,
-    variable:     toJSONLD( variable ),
-    issue:        variable.issue,
+    variable:     toJSONLD( data.variable ),
+    issue:        data.variable.issue,
     variableList: await getVariables(),
+    related:      data.related,
   };
 
 };
