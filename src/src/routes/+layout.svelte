@@ -12,16 +12,11 @@
   <title>{data.settings.title}</title>
 </svelte:head>
 
+<DarkMode class="absolute top-3 right-3 cursor-pointer" />
 
-<div id="container" class="
-  font-sans
-  text-gray           bg-gray-100
-  dark:text-gray-100  dark:bg-gray-500
-">
+<div id="container" class="min-h-full">
 
-  <DarkMode class="text-primary-500 dark:text-primary-600 border dark:border-gray-800 absolute top-3 right-3" />
-
-  <header class="text-left flex flex-row items-center min-h-45">
+  <header class="text-left flex flex-row items-center h-45">
     <div class="inline-block mx-[2em]">
       <a href={resolve('/')}>
         <img
@@ -39,7 +34,7 @@
 
   {@render children?.()}
 
-  <footer class="flex flex-col items-center justify-center min-h-15">
+  <footer class="flex flex-col items-center justify-center min-h-15 self-end">
     <p>{@html data.settings.footer}</p>
   </footer>
 </div>
@@ -49,6 +44,7 @@
   #container {
     display: grid;
     grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, max-content) 1fr;
     grid-template-areas:  "top"
                           "nav"
                           "center"
@@ -70,37 +66,43 @@
     flex-direction: column;
   }
 
-  :global( aside ), :global( nav ) {
-    position: sticky;
-    top: 0;
-  }
-
-  :global(nav) {
-    max-height: calc( 100vh - 240px );
-    overflow: hidden;
-  }
-
-  :global(main) {
-    max-height: auto;
-  }
+  :global(nav) { display: none; }
 
 
   @media (min-width: 992px) {
     #container {
       display: grid;
-      grid-template-columns: 350px 1fr;
+      grid-template-columns: 400px 1fr;
+      grid-template-rows: none;
       grid-template-areas:  "top top"
                             "nav center"
                             "nav side"
                             "bottom bottom";
     }
+
+    :global( aside ), :global( nav ) {
+      position: sticky;
+      top: 0;
+    }
+
+    :global(nav) {
+      display: flex;
+      max-height: calc( 100vh - 240px );
+      overflow: hidden;
+    }
+
+    :global(main) {
+      max-height: auto;
+    }
+
   }
 
   @media (min-width: 1400px) {
 
     #container {
       display: grid;
-      grid-template-columns: 400px calc( 100% - 850px ) 450px ;
+      grid-template-columns: minmax( 400px, 1fr ) minmax( 600px, 1200px ) minmax( 450px, 1fr ) ;
+      grid-template-rows: none;
       grid-template-areas:  "top top top"
                             "nav center side"
                             "bottom bottom bottom";
@@ -108,9 +110,11 @@
 
     :global(aside) {
       margin-right: 2em;
+      max-width: 450px;
     }
     :global(nav) {
-      margin-left: 2em;
+      margin-left: auto;
+      max-width: 400px;
     }
 
   }

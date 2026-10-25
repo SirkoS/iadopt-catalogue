@@ -56,7 +56,7 @@
   };
 </script>
 
-<ButtonGroup class="w-150">
+<ButtonGroup class="max-w-150">
   <Button class="relative iadopt bg {selectButtonClasses}">
     <span class="w-50 text-black font-bold">{selectButtonLabel}</span>
     <ChevronDownOutline class="ms-2 h-6 w-6 text-black dark:text-white absolute right-2" />
@@ -71,8 +71,10 @@
       <DropdownItem class="cursor-pointer text-black iadopt bg statmod"  onclick={() => selectMode( SearchMode.statMod )} >Statistical Modifier</DropdownItem>
     </DropdownGroup>
   </Dropdown>
-  <Input bind:value={needle} placeholder="Filter ..." onkeypress={listenKeys} />
-  <Button color="gray" outline disabled={!needle} onclick={applyClick}>Apply</Button>
+  <Input bind:value={needle} placeholder="Filter ..." onkeypress={listenKeys}
+         class="border-gray-800"/>
+  <Button color="dark" outline disabled={!needle} onclick={applyClick}
+          class="text-gray-600 dark:text-gray-100 border dark:border-gray-800 border-gray-800!">Apply</Button>
 </ButtonGroup>
 
 <div class="mt-3 text-center">

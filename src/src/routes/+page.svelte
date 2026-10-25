@@ -44,7 +44,7 @@
 
 {#snippet sectionItem(item: SectionEntry)}
   <section>
-    <h2 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white" id="{item.extLabel}">{item.extLabel}</h2>
+    <h2 class="mb-2 text-2xl font-bold" id="{item.extLabel}">{item.extLabel}</h2>
     {#each item.variables.sort( sortByLabel ) as variable (variable.path)}
       {#if !hiddenItems.has( variable )}
         <Variable variable={variable}></Variable>
@@ -86,9 +86,3 @@
     </div>
   {/if}
 </main>
-
-<style>
-:global(.hidden) {
-  display: none;
-}
-</style>
