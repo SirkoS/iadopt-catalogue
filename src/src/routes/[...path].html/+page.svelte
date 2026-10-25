@@ -121,7 +121,7 @@
 
     <div class="w-full">
       <iframe
-        class="w-full"
+        class="w-full dark:bg-gray-200 rounded-lg"
         title="Visualization of the Variable"
         src="https://sirkos.github.io/iadopt-vis/remote.html?jsonld={encodeURIComponent( JSON.stringify( data.variable ) )}"
       ></iframe>
