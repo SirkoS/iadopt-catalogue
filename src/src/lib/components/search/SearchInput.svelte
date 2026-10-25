@@ -1,15 +1,18 @@
 <script lang="ts">
-  import { Button, ButtonGroup, Dropdown, DropdownGroup, DropdownItem, Input } from 'flowbite-svelte';
+  import { Button, ButtonGroup, Dropdown, DropdownGroup, DropdownItem, Input, search } from 'flowbite-svelte';
   import { ChevronDownOutline } from 'flowbite-svelte-icons';
   import { SearchMode, SearchModeLabels, SearchModeClasses, type SearchOption } from './defs';
   import SearchBadge from './SearchBadge.svelte';
   import { SvelteSet } from 'svelte/reactivity';
+  import type { SearchData } from '#lib/store/variable.ts';
 
   // interface
   const {
     filters = $bindable(),
+    searchData,
   }: {
-    filters: SvelteSet<SearchOption>
+    filters: SvelteSet<SearchOption>,
+    searchData: SearchData,
   } = $props();
 
   // select mode
@@ -26,6 +29,7 @@
     isSelectOpen = false;
 
   };
+  let autocomplete = $derived( Object.keys( searchData[ SearchModeClasses[ mode ] as keyof SearchData] || {} ).sort() );
 
   // filter
   let needle = $state('');
@@ -34,7 +38,7 @@
   const applyClick = function() {
     filters.add({
       type:   mode,
-      label:  needle,
+      label:  needle.trim(),
     });
     needle = '';
   };
@@ -56,6 +60,7 @@
   };
 </script>
 
+
 <ButtonGroup class="max-w-150">
   <Button class="relative iadopt bg {selectButtonClasses}">
     <span class="w-50 text-black font-bold">{selectButtonLabel}</span>
@@ -71,7 +76,7 @@
       <DropdownItem class="cursor-pointer text-black iadopt bg statmod"  onclick={() => selectMode( SearchMode.statMod )} >Statistical Modifier</DropdownItem>
     </DropdownGroup>
   </Dropdown>
-  <Input bind:value={needle} placeholder="Filter ..." onkeypress={listenKeys}
+  <Input bind:value={needle} placeholder="Filter ..." onkeypress={listenKeys} data={autocomplete} onSelect={applyClick}
          class="border-gray-800"/>
   <Button color="dark" outline disabled={!needle} onclick={applyClick}
           class="text-gray-600 dark:text-gray-100 border dark:border-gray-800 border-gray-800!">Apply</Button>

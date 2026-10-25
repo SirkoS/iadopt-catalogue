@@ -61,7 +61,7 @@
 <main class="flex flex-col pr-0">
 
   <div class="text-center">
-    <SearchInput filters={filters}></SearchInput>
+    <SearchInput filters={filters} searchData={data.searchData}></SearchInput>
   </div>
 
   <Hr classes={{
