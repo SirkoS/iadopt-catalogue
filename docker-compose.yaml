@@ -1,8 +1,8 @@
-
-
 services:
   iadopt-catalogue:
     build: .
     image: sirkos/iadopt-catalogue
     volumes:
       - ./test/:/github/workspace
+    environment:
+      SOURCE_PATH: /github/workspace
