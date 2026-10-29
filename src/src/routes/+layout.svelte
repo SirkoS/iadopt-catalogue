@@ -36,6 +36,7 @@
 
   <footer class="flex flex-col items-center justify-center min-h-15 self-end">
     <p>{@html data.settings.footer}</p>
+    <p class="text-sm">Powered by <a class="underline" href="https://github.com/SirkoS/iadopt-catalogue" target="_blank">SirkoS/iadopt-catalogue</a></p>
   </footer>
 </div>
 
