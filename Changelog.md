@@ -8,6 +8,9 @@
 * support subfolders in nav bars
 * alphabetic sorting in nav bars
 * move to flowbite & tailwindcss
+* added responsive layout & dark mode
+* added component-based search on main page
+* prepared to be used as github action
 
 ### Bugfixes
 * (De)serializing of blank node Entities with Constrains did not keep the proper link

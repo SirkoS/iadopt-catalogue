@@ -1,7 +1,7 @@
 import { promises as Fs } from 'node:fs';
 import Path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
+import getRootPath from './settings/getRootPath';
 
 export type SettingsType = {
   /** title on top of the page */
@@ -20,19 +20,12 @@ let SETTINGS : SettingsType = {
 };
 let SETTINGS_LOADED = false;
 
+// root path for TTL files & config
+export const PATH_ROOT = getRootPath();
 
-// root path to load RDF-files
-// https://stackoverflow.com/a/55944697/1169798
-const pathComponents = Path.dirname( fileURLToPath(import.meta.url) ).split( Path.sep );
-while( (pathComponents.length > 0) && (pathComponents.pop() != 'src' ) ) {}
-if( pathComponents.at(-1) == 'src' ) {
-  pathComponents.pop();
-}
-export const PATH_ROOT = process.env.SOURCE_PATH
-  ? process.env.SOURCE_PATH
-  : Path.join( ... pathComponents, 'test' );
-
-
+/**
+ * load config
+ */
 export async function getSettings() {
 
   // short-circuit

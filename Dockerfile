@@ -1,11 +1,10 @@
-FROM node:24-alpine
+FROM node:26-alpine
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
 
-# environment
-ENV SOURCE_PATH="/github/workspace"
-ENV TARGET_PATH="/github/workspace/build"
+# add pnpm
+COPY --from=ghcr.io/pnpm/pnpm:12-alpine /opt/pnpm /opt/pnpm
+RUN ln -s /opt/pnpm/pnpm /usr/local/bin/pnpm
 
 # install dependencies
 COPY src/pnpm-lock.yaml /home/iadopt-catalog/
