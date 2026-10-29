@@ -77,7 +77,7 @@
     </DropdownGroup>
   </Dropdown>
   <Input bind:value={needle} placeholder="Filter ..." onkeypress={listenKeys} data={autocomplete} onSelect={applyClick}
-         class="border-gray-800"/>
+         class="border-gray-800 rounded-none!"/>
   <Button color="dark" outline disabled={!needle} onclick={applyClick}
           class="text-gray-600 dark:text-gray-100 border dark:border-gray-800 border-gray-800!">Apply</Button>
 </ButtonGroup>
