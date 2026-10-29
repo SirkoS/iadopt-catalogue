@@ -19,6 +19,7 @@ The folder structure will serve as categories.
 name: GitHub Pages
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -28,13 +29,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Build catalogue
-        uses: SirkoS/iadopt-catalogue@main
+        uses: docker://sirkos/iadopt-catalogue
 
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: ./build
 
