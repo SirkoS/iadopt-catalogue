@@ -1,4 +1,3 @@
-import { promises as Fs } from 'node:fs';
 import Path from 'node:path';
 
 /**
@@ -18,6 +17,6 @@ export default function getRootPath() {
 
   // default: use our local test path, e.g., during development
   // root path to load RDF-files
-  return Path.join( process.cwd(), 'test' );
+  return Path.join( process.cwd(), '..', 'test' );
 
 }
