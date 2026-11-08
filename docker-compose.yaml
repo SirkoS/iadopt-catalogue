@@ -1,8 +1,13 @@
 services:
   iadopt-catalogue:
-    build: .
-    image: sirkos/iadopt-catalogue
+    image: sirkos/iadopt-catalogue:latest # ignored
     volumes:
       - ./test/:/github/workspace
     environment:
       SOURCE_PATH: /github/workspace
+    build:
+      context: .
+      tags:
+        - sirkos/iadopt-catalogue:latest
+        - sirkos/iadopt-catalogue:${VERSION}
+
